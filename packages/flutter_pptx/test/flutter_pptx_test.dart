@@ -148,15 +148,15 @@ void main() {
           name: 'Sample Gif',
         );
 
-      await pres.addWidgetSlide((size) => Center(
-            child: Container(
-                padding: const EdgeInsets.all(30.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent, width: 5.0),
-                  color: Colors.redAccent,
-                ),
-                child: const Text("This is an invisible widget")),
-          ));
+      await pres.addWidgetSlide(Center(
+        child: Container(
+            padding: const EdgeInsets.all(30.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent, width: 5.0),
+              color: Colors.redAccent,
+            ),
+            child: const Text("This is an invisible widget")),
+      ));
 
       pres.showSlideNumbers = true;
 

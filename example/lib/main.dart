@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_pptx/flutter_pptx.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'download/download.dart';
 
@@ -13,204 +16,63 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.light(useMaterial3: true).copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
+      title: 'Flutter PPTX Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Presentation Example'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
-  final String title;
+  Future<void> _createPresentation() async {
+    final presentation = FlutterPowerPoint();
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  Future<FlutterPowerPoint> createPresentation() async {
-    final pres = FlutterPowerPoint();
-
-    pres.addTitleSlide(
-      title: 'Slide one'.toTextValue(),
-    );
-
-    pres.addTitleAndPhotoSlide(
-      title: 'Slide two'.toTextValue(),
-      image: ImageReference(
-        path: 'assets/images/sample_gif.gif',
-        name: 'Sample Gif',
+    // Create a slide with title, content, and two images
+    presentation.addTitleContentAndImagesSlide(
+      title: TextValue.uniform('My Custom Slide'),
+      content: TextValue.uniform(
+        'This is the main content of the slide. It can contain multiple lines of text and will be displayed on the left side of the slide.',
       ),
-    );
-
-    pres.addTitleAndPhotoAltSlide(
-      title: 'Slide three'.toTextValue(),
-      image: ImageReference(
-        path: 'assets/images/sample_jpg.jpg',
-        name: 'Sample Jpg',
-      ),
-    );
-
-    pres
-        .addTitleAndBulletsSlide(
-          title: 'Slide three'.toTextValue(),
-          bullets: [
-            'Bullet 1',
-            'Bullet 2',
-            'Bullet 3',
-            'Bullet 4',
-          ].map((e) => e.toTextValue()).toList(),
-        )
-        .speakerNotes = TextValue.uniform('This is a note!');
-
-    pres
-        .addBulletsSlide(
-          bullets: [
-            'Bullet 1',
-            'Bullet 2',
-            'Bullet 3',
-            'Bullet 4',
-          ].map((e) => e.toTextValue()).toList(),
-        )
-        .speakerNotes = TextValue.singleLine([
-      TextItem('This '),
-      TextItem('is ', isBold: true),
-      TextItem('a ', isUnderline: true),
-      TextItem('note!'),
-    ]);
-
-    pres.addTitleBulletsAndPhotoSlide(
-      title: 'Slide five'.toTextValue(),
-      image: ImageReference(
-        path: 'assets/images/sample_jpg.jpg',
-        name: 'Sample Jpg',
-      ),
-      bullets: [
-        'Bullet 1',
-        'Bullet 2',
-        'Bullet 3',
-        'Bullet 4',
-      ].map((e) => e.toTextValue()).toList(),
-    );
-
-    pres
-        .addSectionSlide(
-          section: 'Section 1'.toTextValue(),
-        )
-        .speakerNotes = TextValue.multiLine([
-      TextValueLine(values: [
-        TextItem('This '),
-        TextItem('is ', isBold: true),
-        TextItem('a ', isUnderline: true),
-        TextItem('note 1!'),
-      ]),
-      TextValueLine(values: [
-        TextItem('This '),
-        TextItem('is ', isBold: true),
-        TextItem('a ', isUnderline: true),
-        TextItem('note 2!'),
-      ]),
-    ]);
-
-    pres.addTitleOnlySlide(
-      title: 'Title 1'.toTextValue(),
-      subtitle: 'Subtitle 1'.toTextValue(),
-    );
-
-    pres.addAgendaSlide(
-      title: 'Title 1'.toTextValue(),
-      subtitle: 'Subtitle 1'.toTextValue(),
-      topics: 'Topics 1'.toTextValue(),
-    );
-
-    pres.addStatementSlide(
-      statement: 'Statement 1'.toTextValue(),
-    );
-
-    pres.addBigFactSlide(
-      fact: 'Title 1'.toTextLine(),
-      information: 'Fact 1'.toTextValue(),
-    );
-
-    pres.addQuoteSlide(
-      quote: 'Quote 1'.toTextLine(),
-      attribution: 'Attribution 1'.toTextValue(),
-    );
-
-    pres.addPhoto3UpSlide(
       image1: ImageReference(
-        path: 'assets/images/sample_gif.gif',
-        name: 'Sample Gif',
+        path: 'assets/images/sample_jpg.jpg',
+        name: 'Image 1',
       ),
       image2: ImageReference(
-        path: 'assets/images/sample_jpg.jpg',
-        name: 'Sample Jpg',
-      ),
-      image3: ImageReference(
         path: 'assets/images/sample_png.png',
-        name: 'Sample Png',
+        name: 'Image 2',
       ),
+      caption1: TextValue.uniform('Caption for first image'),
+      caption2: TextValue.uniform('Caption for second image'),
     );
 
-    pres.addPhotoSlide(
-      image: ImageReference(
-        path: 'assets/images/sample_gif.gif',
-        name: 'Sample Gif',
-      ),
-    );
-
-    pres.addBlankSlide();
-
-    pres.addBlankSlide().background.color = '000000';
-
-    pres.addBlankSlide().background.image = ImageReference(
-      path: 'assets/images/sample_gif.gif',
-      name: 'Sample Gif',
-    );
-
-    await pres.addWidgetSlide(
-      (size) => Center(
-        child: Container(
-          padding: const EdgeInsets.all(30.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent, width: 5.0),
-            color: Colors.redAccent,
-          ),
-          child: const Text("This is an invisible widget"),
-        ),
-      ),
-    );
-
-    pres.showSlideNumbers = true;
-
-    return pres;
-  }
-
-  Future<void> downloadPresentation(FlutterPowerPoint pres) async {
-    final bytes = await pres.save();
+    // Generate the PPTX file
+    final bytes = await presentation.save();
     if (bytes == null) return;
-    downloadFile('presentation.pptx', bytes);
+
+    // Save to temporary file
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/presentation.pptx');
+    await file.writeAsBytes(bytes);
+
+    // Share the file
+    await Share.shareXFiles([XFile(file.path)],
+        text: 'Check out my presentation!');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Flutter PPTX Demo'),
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () async {
-            final pres = await createPresentation();
-            await downloadPresentation(pres);
-          },
-          child: const Text('Download Presentation'),
+          onPressed: _createPresentation,
+          child: const Text('Create Presentation'),
         ),
       ),
     );

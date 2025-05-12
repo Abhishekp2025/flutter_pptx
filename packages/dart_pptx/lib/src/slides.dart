@@ -1,3 +1,5 @@
+import 'package:dart_pptx/dart_pptx.dart' show SlideTitleContentAndImages;
+
 import 'classes.dart';
 import 'powerpoint.dart';
 
@@ -32,6 +34,7 @@ export 'slides/title_and_photo.dart';
 export 'slides/title_bullets_and_photo.dart';
 export 'slides/title_only.dart';
 export 'slides/title.dart';
+export 'slides/title_content_and_images.dart';
 
 extension SlideTemplates on PowerPoint {
   Slide addTitleSlide({
@@ -174,4 +177,21 @@ extension SlideTemplates on PowerPoint {
       SlideBlank(),
     );
   }
+
+  Slide addTitleContentAndImagesSlide({
+    TextValue? title,
+    TextValue? content,
+    ImageReference? image1,
+    ImageReference? image2,
+    TextValue? caption1,
+    TextValue? caption2,
+  }) =>
+      addSlide(SlideTitleContentAndImages(
+        title: title,
+        content: content,
+        image1: image1,
+        image2: image2,
+        caption1: caption1,
+        caption2: caption2,
+      ));
 }

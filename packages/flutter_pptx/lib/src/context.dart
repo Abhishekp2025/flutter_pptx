@@ -4,7 +4,7 @@ import 'package:screenshot/screenshot.dart';
 import 'assets.dart';
 
 class FlutterPresentationContext extends PresentationContext {
-  var screenshotController = ScreenshotController();
+  final screenshotController = ScreenshotController();
 
   @override
   // ignore: overridden_fields
